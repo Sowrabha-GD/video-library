@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+/* ── Design tokens ─────────────────────────────────────── */
+:root {
+  --bg-base: #050B18;
+  --bg-card: #0D1525;
+  --bg-deep: #030811;
+  --blue-primary: #3B82F6;
+  --blue-glow: rgba(59, 130, 246, 0.15);
+  --violet-primary: #8B5CF6;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Base resets ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: #fff;
+  font-family: "Inter", "SF Pro Display", system-ui, -apple-system, sans-serif;
+  margin: 0;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Selection ──────────────────────────────────────────── */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #fff;
+}
+
+/* ── Glassmorphism utility ──────────────────────────────── */
+.glass {
+  background: rgba(13, 21, 37, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-hover:hover {
+  background: rgba(17, 28, 48, 0.8);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Line clamp utilities ───────────────────────────────── */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Gradient text ──────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #60A5FA, #A78BFA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Ambient glow ───────────────────────────────────────── */
+.glow-blue {
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.05);
+}
+
+/* ── Focus visible ──────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Page transitions ───────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+/* ── Image lazy load fade ───────────────────────────────── */
+img { transition: opacity 0.3s ease; }
+img[loading="lazy"] { opacity: 0; }
+img[loading="lazy"].loaded { opacity: 1; }
+
+/* ── Aspect ratio ───────────────────────────────────────── */
+.aspect-video { aspect-ratio: 16 / 9; }
+
+/* ── Native select styling ──────────────────────────────── */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+}
+select option {
+  background: #0D1525;
+  color: #fff;
+}
+
+/* ── Prevent text overflow globally ────────────────────── */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

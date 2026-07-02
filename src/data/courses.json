@@ -1,0 +1,186 @@
+[
+  {
+    "id": "salesforce-admin",
+    "title": "Salesforce Admin",
+    "thumbnail": "/images/courses/salesforce-admin.png",
+    "description": "Master Salesforce Administration from beginner to advanced level.",
+    "instructor": "Jeet Singh",
+    "category": "Salesforce",
+    "videos": [
+      {
+        "title": "Introduction to Salesforce",
+        "youtubeId": "vfEWGq8zQWc",
+        "duration": "12 min"
+      },
+      {
+        "title": "Objects and Relationships",
+        "youtubeId": "ck5F-65MZ6o",
+        "duration": "18 min"
+      },
+      {
+        "title": "Fields and Record Types",
+        "youtubeId": "OlqFcF8lbT4",
+        "duration": "15 min"
+      },
+      {
+        "title": "Security Model",
+        "youtubeId": "itfC3ag2gY4",
+        "duration": "22 min"
+      },
+      {
+        "title": "Reports and Dashboards",
+        "youtubeId": "VIDEO_ID_5",
+        "duration": "20 min"
+      }
+    ],
+    "suggestedCourses": [
+    "apex-development",
+    "lwc-development",
+    "integration-architecture"
+  ]
+  },
+
+  {
+    "id": "apex-development",
+    "title": "Apex Development",
+    "thumbnail": "/images/courses/apex-development.png",
+    "description": "Learn Apex programming and backend Salesforce development.",
+    "instructor": "Jeet Singh",
+    "category": "Development",
+    "videos": [
+      {
+        "title": "Apex Fundamentals",
+        "youtubeId": "VIDEO_ID_6",
+        "duration": "15 min"
+      },
+      {
+        "title": "Apex Triggers",
+        "youtubeId": "VIDEO_ID_7",
+        "duration": "20 min"
+      },
+      {
+        "title": "SOQL and SOSL",
+        "youtubeId": "VIDEO_ID_8",
+        "duration": "18 min"
+      },
+      {
+        "title": "Batch Apex",
+        "youtubeId": "VIDEO_ID_9",
+        "duration": "25 min"
+      },
+      {
+        "title": "Unit Testing",
+        "youtubeId": "VIDEO_ID_10",
+        "duration": "22 min"
+      }
+    ]
+  },
+
+  {
+    "id": "lwc-development",
+    "title": "Lightning Web Components",
+    "thumbnail": "/images/courses/lwc.png",
+    "description": "Build modern Salesforce UI using Lightning Web Components.",
+    "instructor": "Jeet Singh",
+    "category": "Frontend",
+    "videos": [
+      {
+        "title": "LWC Introduction",
+        "youtubeId": "VIDEO_ID_11",
+        "duration": "14 min"
+      },
+      {
+        "title": "Creating Components",
+        "youtubeId": "VIDEO_ID_12",
+        "duration": "18 min"
+      },
+      {
+        "title": "Wire Service",
+        "youtubeId": "VIDEO_ID_13",
+        "duration": "20 min"
+      },
+      {
+        "title": "Apex Integration",
+        "youtubeId": "VIDEO_ID_14",
+        "duration": "25 min"
+      },
+      {
+        "title": "Deployment",
+        "youtubeId": "VIDEO_ID_15",
+        "duration": "16 min"
+      }
+    ]
+  },
+
+  {
+    "id": "salesforce-architecture",
+    "title": "Salesforce Architecture",
+    "thumbnail": "/images/courses/architecture.png",
+    "description": "Learn architecture concepts for Application Architect and CTA journey.",
+    "instructor": "Jeet Singh",
+    "category": "Architecture",
+    "videos": [
+      {
+        "title": "Architecture Fundamentals",
+        "youtubeId": "VIDEO_ID_16",
+        "duration": "20 min"
+      },
+      {
+        "title": "Data Architecture",
+        "youtubeId": "VIDEO_ID_17",
+        "duration": "24 min"
+      },
+      {
+        "title": "Application Architecture",
+        "youtubeId": "VIDEO_ID_18",
+        "duration": "22 min"
+      },
+      {
+        "title": "Identity Architecture",
+        "youtubeId": "VIDEO_ID_19",
+        "duration": "18 min"
+      },
+      {
+        "title": "CTA Preparation",
+        "youtubeId": "VIDEO_ID_20",
+        "duration": "30 min"
+      }
+    ]
+  },
+
+  {
+    "id": "integration-apis",
+    "title": "Integration & APIs",
+    "thumbnail": "/images/courses/integration.png",
+    "description": "Master Salesforce integrations, APIs, and enterprise connectivity.",
+    "instructor": "Jeet Singh",
+    "category": "Integration",
+    "videos": [
+      {
+        "title": "Integration Fundamentals",
+        "youtubeId": "VIDEO_ID_21",
+        "duration": "15 min"
+      },
+      {
+        "title": "REST APIs",
+        "youtubeId": "VIDEO_ID_22",
+        "duration": "20 min"
+      },
+      {
+        "title": "SOAP APIs",
+        "youtubeId": "VIDEO_ID_23",
+        "duration": "18 min"
+      },
+      {
+        "title": "Platform Events",
+        "youtubeId": "VIDEO_ID_24",
+        "duration": "22 min"
+      },
+      {
+        "title": "Integration Patterns",
+        "youtubeId": "VIDEO_ID_25",
+        "duration": "26 min"
+      }
+    ]
+  }
+]
