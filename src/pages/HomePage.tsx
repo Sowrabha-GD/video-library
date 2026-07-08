@@ -4,35 +4,29 @@ import { Rocket, CheckCircle, GraduationCap, Star, Users, Play } from "lucide-re
 import { HeroCarousel } from "../components/site/HeroCarousel";
 import { SectionHeader } from "../components/site/SectionHeader";
 import { CourseCard } from "../components/course/CourseCard";
-import { CategoryGrid } from "../components/site/CategoryGrid";
-import { LearningTrackCard } from "../components/site/LearningTrackCard";
+import { CategoryGrid, type CategorySummary } from "../components/site/CategoryGrid";
 import coursesData from "../data/courses.json";
-import type { Course, Category, LearningTrack } from "../types/course";
+import type { Course } from "../types/course";
 
 export function HomePage() {
-  const courses = coursesData as unknown as Course[];
-  const categories = useMemo<Category[]>(() => {
-    const categoryNames = Array.from(new Set(courses.map((course) => course.category)));
-    const categoryIconKeys = ["rocket", "graduation-cap", "star", "users", "play", "check-circle"];
-    const categoryColors = ["blue", "violet", "emerald", "amber", "cyan", "fuchsia"];
+  const courses = coursesData as Course[];
 
-    return categoryNames.map((category, index) => ({
-      id: category.toLowerCase().replace(/\s+/g, "-"),
-      name: category,
-      title: category,
-      description: `Courses covering ${category}.`,
-      icon: categoryIconKeys[index % categoryIconKeys.length],
-      color: categoryColors[index % categoryColors.length],
-      courseCount: courses.filter((course) => course.category === category).length,
+  const categories = useMemo<CategorySummary[]>(() => {
+    const names = Array.from(new Set(courses.map((course) => course.category)));
+    return names.map((name) => ({
+      name,
+      count: courses.filter((course) => course.category === name).length,
     }));
   }, [courses]);
-  const tracks: LearningTrack[] = [];
 
-  const featuredCourses = useMemo(() => courses.filter((c) => c.isFeatured), [courses]);
-  const heroCourses = useMemo(() => featuredCourses.slice(0, 4), [featuredCourses]);
-  const popularCourses = useMemo(() =>
-    [...courses].sort((a, b) => b.enrolledCount - a.enrolledCount).slice(0, 4),
-  [courses]);
+  // No "featured" flag exists in the flat data model, so the first few
+  // courses in the catalog are treated as featured/hero content.
+  const featuredCourses = useMemo(() => courses.slice(0, 4), [courses]);
+  const heroCourses = featuredCourses;
+
+  // No enrollment/rating data exists either, so "popular" just surfaces
+  // a different slice of the catalog than "featured" so the sections don't repeat.
+  const popularCourses = useMemo(() => courses.slice(-4).reverse(), [courses]);
 
   return (
     <div>
@@ -44,10 +38,10 @@ export function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-white/[0.05]">
             {[
-              { value: "48,200+", label: "Active Learners", icon: <Users size={18} className="text-blue-400" /> },
-              { value: "12", label: "Expert Courses", icon: <GraduationCap size={18} className="text-violet-400" /> },
+              { value: `${courses.length}`, label: "Expert Courses", icon: <GraduationCap size={18} className="text-violet-400" /> },
+              { value: `${categories.length}`, label: "Categories", icon: <Users size={18} className="text-blue-400" /> },
+              { value: `${courses.reduce((sum, c) => sum + c.videos.length, 0)}`, label: "Video Lessons", icon: <Play size={18} className="text-emerald-400" /> },
               { value: "4.9", label: "Avg. Rating", icon: <Star size={18} className="text-amber-400" /> },
-              { value: "500+", label: "Hours of Content", icon: <Play size={18} className="text-emerald-400" /> },
             ].map((s) => (
               <div key={s.label} className="md:px-8 first:pl-0 last:pr-0 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center">
@@ -87,19 +81,6 @@ export function HomePage() {
         <CategoryGrid categories={categories} />
       </section>
 
-      {/* Learning Tracks */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
-        <SectionHeader
-          title="Learning Tracks"
-          subtitle="Structured paths from beginner to architect — follow a proven progression."
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {tracks.map((track) => (
-            <LearningTrackCard key={track.id} track={track} courses={courses} />
-          ))}
-        </div>
-      </section>
-
       {/* Popular Courses */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <SectionHeader
@@ -137,7 +118,7 @@ export function HomePage() {
             <div className="flex-1 text-center md:text-left">
               <p className="text-blue-400 text-xs font-bold uppercase tracking-widest mb-2">Your Instructor</p>
               <h2 className="text-white text-3xl font-extrabold mb-2">Jeet Singh</h2>
-              <p className="text-white/50 text-sm mb-4">Salesforce CTA · 12x Certified · 10+ Years · 60+ Projects</p>
+              <p className="text-white/50 text-sm mb-4">Salesforce Architect · Founder of Wizdin</p>
               <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
                 {["CTA", "MuleSoft Integration Architect", "CPQ Specialist", "Platform Dev II"].map((cert) => (
                   <span key={cert} className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-300 text-xs font-medium">
@@ -156,10 +137,8 @@ export function HomePage() {
             </div>
             <div className="hidden lg:grid grid-cols-2 gap-3 flex-shrink-0">
               {[
-                { val: "48,200+", lbl: "Students" },
-                { val: "4.9 ★", lbl: "Avg Rating" },
-                { val: "12", lbl: "Courses" },
-                { val: "12", lbl: "Certifications" },
+                { val: `${courses.length}`, lbl: "Courses" },
+                { val: `${categories.length}`, lbl: "Categories" },
               ].map((s) => (
                 <div key={s.lbl} className="bg-white/[0.04] rounded-xl p-4 text-center w-28">
                   <div className="text-white font-bold text-xl">{s.val}</div>
@@ -191,7 +170,7 @@ export function HomePage() {
               </span>
             </h2>
             <p className="text-white/50 text-lg mb-10 max-w-xl mx-auto">
-              Join 48,000+ learners building their Salesforce career with Wizdin's premium video courses.
+              Learn Salesforce with Wizdin's video courses, taught by Jeet Singh.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
               <Link
@@ -204,11 +183,11 @@ export function HomePage() {
                 to="/dashboard"
                 className="px-8 py-4 rounded-xl bg-white/[0.07] hover:bg-white/[0.11] border border-white/[0.12] text-white font-semibold text-lg transition-all"
               >
-                My Dashboard
+                Dashboard
               </Link>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-5 text-white/40 text-sm">
-              {["No subscription needed", "Lifetime access", "Certificate on completion", "Updated regularly"].map((f) => (
+              {["No subscription needed", "Lifetime access", "Updated regularly"].map((f) => (
                 <span key={f} className="flex items-center gap-1.5">
                   <CheckCircle size={14} className="text-emerald-500" /> {f}
                 </span>

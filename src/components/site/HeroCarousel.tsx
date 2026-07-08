@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Play, Star, Users, Clock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Layers, User } from "lucide-react";
 import type { Course } from "../../types/course";
 
 interface HeroCarouselProps {
@@ -42,6 +42,7 @@ export function HeroCarousel({ courses }: HeroCarouselProps) {
   }
 
   const course = courses[current];
+  const firstVideo = course.videos[0];
 
   return (
     <div className="relative w-full overflow-hidden" style={{ minHeight: "85vh" }}>
@@ -52,7 +53,7 @@ export function HeroCarousel({ courses }: HeroCarouselProps) {
         style={{ opacity: isTransitioning ? 0 : 1 }}
       >
         <img
-          src={course.heroImage}
+          src={course.thumbnail}
           alt=""
           className="w-full h-full object-cover"
         />
@@ -74,17 +75,9 @@ export function HeroCarousel({ courses }: HeroCarouselProps) {
         >
           {/* Category pill */}
           <div className="flex items-center gap-3 mb-5">
-            <span
-              className="px-3 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase text-white"
-              style={{ backgroundColor: course.categoryColor + "33", border: `1px solid ${course.categoryColor}55` }}
-            >
+            <span className="px-3 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase text-blue-300 bg-blue-500/15 border border-blue-500/30">
               {course.category}
             </span>
-            {course.isBestseller && (
-              <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-amber-400/15 border border-amber-400/30 text-amber-400 tracking-wider uppercase">
-                Bestseller
-              </span>
-            )}
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-5 tracking-tight">
@@ -92,48 +85,43 @@ export function HeroCarousel({ courses }: HeroCarouselProps) {
           </h1>
 
           <p className="text-white/65 text-lg mb-8 leading-relaxed max-w-xl">
-            {course.shortDescription}
+            {course.description}
           </p>
 
           {/* Stats */}
           <div className="flex flex-wrap gap-5 mb-8">
-            <div className="flex items-center gap-1.5">
-              <Star size={16} className="text-amber-400 fill-amber-400" />
-              <span className="text-amber-400 font-bold">{course.rating}</span>
-              <span className="text-white/40 text-sm">({course.reviewsCount.toLocaleString()} reviews)</span>
+            <div className="flex items-center gap-1.5 text-white/50 text-sm">
+              <Layers size={15} />
+              <span>{course.category}</span>
             </div>
             <div className="flex items-center gap-1.5 text-white/50 text-sm">
-              <Users size={15} />
-              <span>{course.enrolledCount.toLocaleString()} enrolled</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-white/50 text-sm">
-              <Clock size={15} />
-              <span>{course.duration}</span>
+              <Play size={15} />
+              <span>{course.videos.length} videos</span>
             </div>
           </div>
 
           {/* Instructor */}
           <div className="flex items-center gap-3 mb-10">
-            <img
-              src={course.instructor.avatar}
-              alt={course.instructor.name}
-              className="w-10 h-10 rounded-full object-cover ring-2 ring-blue-500/40"
-            />
+            <div className="w-10 h-10 rounded-full bg-blue-500/15 border border-blue-500/30 flex items-center justify-center">
+              <User size={16} className="text-blue-300" />
+            </div>
             <div>
-              <p className="text-white text-sm font-semibold">{course.instructor.name}</p>
-              <p className="text-white/45 text-xs">{course.instructor.title}</p>
+              <p className="text-white text-sm font-semibold">{course.instructor}</p>
+              <p className="text-white/45 text-xs">Instructor</p>
             </div>
           </div>
 
           {/* CTA */}
           <div className="flex gap-3">
-            <Link
-              to={`/course/${course.id}`}
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 hover:from-blue-400 hover:to-violet-500 text-white font-bold transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5"
-            >
-              <Play size={18} className="fill-white" />
-              Start Learning
-            </Link>
+            {firstVideo && (
+              <Link
+                to={`/watch/${course.id}/${firstVideo.youtubeId}`}
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-violet-600 hover:from-blue-400 hover:to-violet-500 text-white font-bold transition-all shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-0.5"
+              >
+                <Play size={18} className="fill-white" />
+                Start Learning
+              </Link>
+            )}
             <Link
               to={`/course/${course.id}`}
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.12] border border-white/[0.12] text-white font-semibold transition-all backdrop-blur-sm"

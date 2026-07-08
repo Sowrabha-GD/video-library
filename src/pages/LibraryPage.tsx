@@ -1,30 +1,20 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Search, Filter, X, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { Search, X, SlidersHorizontal } from "lucide-react";
 import { CourseCard } from "../components/course/CourseCard";
 import coursesData from "../data/courses.json";
 import type { Course } from "../types/course";
-
-const LEVELS = ["All Levels", "Beginner", "Intermediate", "Advanced"];
-const SORT_OPTIONS = [
-  { value: "popular", label: "Most Popular" },
-  { value: "rating", label: "Highest Rated" },
-  { value: "newest", label: "Newest" },
-  { value: "duration-asc", label: "Shortest First" },
-];
 
 export function LibraryPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [activeCategory, setActiveCategory] = useState(searchParams.get("category") ?? "All");
-  const [activeLevel, setActiveLevel] = useState("All Levels");
-  const [sortBy, setSortBy] = useState("popular");
   const [showFilters, setShowFilters] = useState(false);
 
-  const courses = coursesData.courses as Course[];
+  const courses = coursesData as Course[];
   const categories = ["All", ...Array.from(new Set(courses.map((c) => c.category)))];
 
-  // Sync search param
+  // Sync from URL search params (e.g. links from Navbar search or category breadcrumbs)
   useEffect(() => {
     const q = searchParams.get("q");
     if (q) setQuery(q);
@@ -40,9 +30,9 @@ export function LibraryPage() {
       result = result.filter(
         (c) =>
           c.title.toLowerCase().includes(q) ||
-          c.shortDescription.toLowerCase().includes(q) ||
+          c.description.toLowerCase().includes(q) ||
           c.category.toLowerCase().includes(q) ||
-          c.tags.some((t) => t.toLowerCase().includes(q))
+          c.instructor.toLowerCase().includes(q)
       );
     }
 
@@ -50,29 +40,16 @@ export function LibraryPage() {
       result = result.filter((c) => c.category === activeCategory);
     }
 
-    if (activeLevel !== "All Levels") {
-      result = result.filter((c) => c.level === activeLevel || c.level === "All Levels");
-    }
-
-    switch (sortBy) {
-      case "popular": result.sort((a, b) => b.enrolledCount - a.enrolledCount); break;
-      case "rating": result.sort((a, b) => b.rating - a.rating); break;
-      case "newest": result.sort((a, b) => new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()); break;
-      case "duration-asc": result.sort((a, b) => a.videoCount - b.videoCount); break;
-    }
-
     return result;
-  }, [courses, query, activeCategory, activeLevel, sortBy]);
+  }, [courses, query, activeCategory]);
 
   const clearFilters = () => {
     setQuery("");
     setActiveCategory("All");
-    setActiveLevel("All Levels");
-    setSortBy("popular");
     setSearchParams({});
   };
 
-  const hasFilters = query || activeCategory !== "All" || activeLevel !== "All Levels";
+  const hasFilters = query !== "" || activeCategory !== "All";
 
   return (
     <div className="min-h-screen pt-20">
@@ -92,7 +69,7 @@ export function LibraryPage() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search courses, topics, or skills..."
+                placeholder="Search courses, topics, or instructors..."
                 className="flex-1 bg-transparent px-3 py-3.5 text-white placeholder-white/30 outline-none text-sm"
               />
               {query && (
@@ -117,56 +94,37 @@ export function LibraryPage() {
           {/* Expandable Filters */}
           {showFilters && (
             <div className="mt-4 p-5 bg-[#0D1525] rounded-2xl border border-white/[0.07]">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                {/* Level filter */}
-                <div>
-                  <label className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-2 block">Level</label>
-                  <div className="flex flex-wrap gap-2">
-                    {LEVELS.map((l) => (
-                      <button
-                        key={l}
-                        onClick={() => setActiveLevel(l)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                          activeLevel === l
-                            ? "bg-blue-500 text-white"
-                            : "bg-white/[0.05] text-white/50 hover:text-white hover:bg-white/[0.09]"
-                        }`}
-                      >
-                        {l}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Sort */}
-                <div>
-                  <label className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-2 block">Sort by</label>
-                  <div className="relative">
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full bg-[#080F1E] border border-white/[0.1] rounded-xl px-4 py-2.5 text-sm text-white outline-none appearance-none cursor-pointer"
-                    >
-                      {SORT_OPTIONS.map((o) => (
-                        <option key={o.value} value={o.value}>{o.label}</option>
-                      ))}
-                    </select>
-                    <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* Clear */}
-                {hasFilters && (
-                  <div className="flex items-end">
+              <div>
+                <label className="text-white/40 text-xs font-semibold uppercase tracking-wider mb-2 block">
+                  Category
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((cat) => (
                     <button
-                      onClick={clearFilters}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20 transition-all"
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        activeCategory === cat
+                          ? "bg-blue-500 text-white"
+                          : "bg-white/[0.05] text-white/50 hover:text-white hover:bg-white/[0.09]"
+                      }`}
                     >
-                      <X size={14} /> Clear filters
+                      {cat}
                     </button>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
+
+              {hasFilters && (
+                <div className="mt-4">
+                  <button
+                    onClick={clearFilters}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20 transition-all"
+                  >
+                    <X size={14} /> Clear filters
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -198,7 +156,10 @@ export function LibraryPage() {
             </div>
             <h3 className="text-white text-xl font-semibold mb-2">No courses found</h3>
             <p className="text-white/40 mb-6">Try adjusting your search or removing filters.</p>
-            <button onClick={clearFilters} className="px-5 py-2.5 bg-blue-500/15 border border-blue-500/30 text-blue-300 rounded-xl text-sm font-medium hover:bg-blue-500/25 transition-all">
+            <button
+              onClick={clearFilters}
+              className="px-5 py-2.5 bg-blue-500/15 border border-blue-500/30 text-blue-300 rounded-xl text-sm font-medium hover:bg-blue-500/25 transition-all"
+            >
               Clear all filters
             </button>
           </div>
